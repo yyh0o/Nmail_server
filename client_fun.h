@@ -38,6 +38,7 @@ int modifyContect();
 int modifyBlackList();
 int servLogin(int sock);
 int servSignUp(int sock);
+int servLogOut(int sock);
 
 
 #endif //NMAIL_SERVER_CLIENT_FUN_H

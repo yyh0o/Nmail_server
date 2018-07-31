@@ -54,6 +54,8 @@ void *client_fun(void *arg)
             case SINGUP:
                 break;
             case LOGOUT:
+                servLogOut(sock);
+                flag = -1024;
                 break;
             default:
                 break;
@@ -104,6 +106,9 @@ int getFlag(int socket){
         flag = 9;
         mySendMsg(socket, &flag, sizeof(flag), MY_MSG);
         return flag;
+    }
+    else if (strcmp(buffer, "10") == 0){
+        flag = 10;
     }
     else if (strcmp(buffer, "-1024") == 0){
         flag = -1024;
@@ -160,6 +165,15 @@ int servLogin(int sock) {
     return flag;
 
 
+}
+
+int servLogOut(int sock){
+    char id[FLAG_SIZE] = {0};
+    char type;
+    myRecvMsg(sock, id, &type);
+    logout(id);
+    mySendMsg(sock, "OK", sizeof("OK"), MY_MSG);
+    return 0;
 }
 
 int servSignUp(int sock) {

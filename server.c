@@ -10,7 +10,7 @@ int serverInit(){
 
     int sockfd = 0;				//用于储存服务端套接字
 
-    unsigned short port = 23333; // 监听端口
+    unsigned short port = MY_PORT; // 监听端口
     sockfd = new_server_sock(port); //初始化服务端套接字
     printf("TCP Server Started at port %d!\n", port);
     pthread_t thread_id;

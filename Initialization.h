@@ -17,6 +17,7 @@ typedef struct{
     char passWord[20];
     int state;
 }REGISTERINFOR;//注册信息结构体
+
 int sysInitiallization();
 int selfInitiallization(char* userId,char*passWord);
 int fwUser(char * userId,char* passWord);

@@ -3,6 +3,7 @@
 //
 #include "client_fun.h"
 #include "mySocket.h"
+#include "login.h"
 
 /************************************************************************
 函数名称：	void *client_fun(void *arg)
@@ -12,31 +13,39 @@
 ************************************************************************/
 void *client_fun(void *arg)
 {
-    int recv_len = 0;
-    char recv_buf[1024] = "";	// 接收缓冲区
-    int connfd = (int)arg; // 传过来的已连接套接字
-
-//    while((recv_len = recv(connfd, recv_buf, sizeof(recv_buf), 0)) > 0)
-//    {
-//        printf("recv_buf: %s\n", recv_buf); // 打印数据
-//        send(connfd, recv_buf, recv_len, 0); // 给客户端回数据
-//    }
-//
-
-//    FILE* fp = fopen("../1.png","r");
-//    mySendFile(connfd, "1.png", 6, fp);
-//    fclose(fp);
-
-    // 接收数据
-    while (1){
-        char type;
-        recv_len = myRecvMsg(connfd, recv_buf, &type);
-        printf("recv_buf: %s\n", recv_buf); // 打印数据
-        mySendMsg(connfd, recv_buf, recv_len, MY_MSG);//给客户端回数据
-        if (recv_len <= 0)
-            break;
-        if (type == MY_MSG_EXIT)
-            break;
+    int connfd = (int)arg;      // 传入的已连接套接字
+    int flag = 0;
+    while (flag != -1){
+        flag = getFlag(connfd);
+        switch (flag) {
+            case RECV_MAIL:
+                recvMail();
+                break;
+            case CHECK_MAIL:
+                checkMail();
+                break;
+            case SEND_MAIL:
+                sendMail();
+                break;
+            case DEL_MAIL:
+                delMail();
+                break;
+            case START_MAIL:
+                startMail();
+                break;
+            case MODIFY_CONTACT:
+                modifyContect();
+                break;
+            case MODIFY_BLACK_LIST:
+                modifyBlackList();
+                break;
+            case STOP_LOOP:
+                break;
+            case LOGIN:
+                servLogin();
+            default:
+                break;
+        }
     }
 
 
@@ -44,4 +53,78 @@ void *client_fun(void *arg)
     close(connfd);	//关闭已连接套接字
 
     return 	NULL;
+}
+
+int getFlag(int socket){
+    char buffer[BUFFER_SIZE];
+    bzero(buffer, sizeof(buffer));
+    char type;
+    myRecvMsg(socket, buffer, &type);
+    if (strcmp(buffer, "exit") == 0){
+        return STOP_LOOP;
+    }
+    else {
+        printf("recv_buffer: %s\n", buffer);
+        if (mySendMsg(socket, buffer, sizeof(buffer), MY_MSG) < 0){
+            return -1;
+        }
+        return 0;
+    }
+}
+
+int recvMail(){
+
+}
+
+int checkMail(){
+
+}
+
+int sendMail(){
+
+}
+
+int delMail() {
+
+}
+
+int startMail() {
+
+}
+
+int modifyContect() {
+
+}
+
+int modifyBlackList() {
+
+}
+
+int servLogin(int sock){
+    char id[BUFFER_SIZE];
+    char pass[BUFFER_SIZE];
+    char type;
+    bzero(id, sizeof(id));
+    bzero(pass, sizeof(pass));
+    myRecvMsg(sock, id, &type);
+    myRecvMsg(sock, pass, &type);
+    int flag = login(id, pass);
+    switch (flag) {
+        case 0:
+            break;
+        case -1:
+            perror("文件打开错误");
+            break;
+        case -2:
+            break;
+        case -3:
+            break;
+        case -4:
+            break;
+        default:
+            break;
+    }
+    return flag;
+
+
 }

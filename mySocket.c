@@ -107,6 +107,7 @@ int  myRecvMsg(int sockdf, char *buf, char* type) {
     char* buffer = (char*)malloc(sizeof(myMsgHead)+1);      //创建一个缓冲区
     recv(sockdf, buffer, sizeof(myMsgHead), 0);             //接收一个数据头大小的数据
     memcpy(&head, buffer, sizeof(myMsgHead));               //将接收的数据写进数据头
+//    printf("%d\n",head.len);
     recv(sockdf,buf,head.len,0);                            //接受数据
     free(buffer);                                           //释放冲区内存
     buffer = NULL;

@@ -4,6 +4,7 @@
 #include "client_fun.h"
 #include "mySocket.h"
 #include "login.h"
+#include "Initialization.h"
 
 /************************************************************************
 函数名称：	void *client_fun(void *arg)
@@ -13,10 +14,17 @@
 ************************************************************************/
 void *client_fun(void *arg)
 {
-    int connfd = (int)arg;      // 传入的已连接套接字
+    int sock = (int)arg;      // 传入的已连接套接字
+
+//    while (!loginState){
+//        servLogin(sock, &loginState);
+//    }
+
     int flag = 0;
-    while (flag != -1){
-        flag = getFlag(connfd);
+    while (flag != STOP_LOOP){
+        if ((flag = getFlag(sock)) != -4){
+
+        }
         switch (flag) {
             case RECV_MAIL:
                 recvMail();
@@ -42,34 +50,75 @@ void *client_fun(void *arg)
             case STOP_LOOP:
                 break;
             case LOGIN:
-                servLogin();
+                servLogin(sock);
+            case SINGUP:
+                break;
+            case LOGOUT:
+                break;
             default:
                 break;
         }
+
     }
 
 
     printf("client closed!\n");
-    close(connfd);	//关闭已连接套接字
+    close(sock);	//关闭已连接套接字
 
     return 	NULL;
 }
 
 int getFlag(int socket){
-    char buffer[BUFFER_SIZE];
-    bzero(buffer, sizeof(buffer));
+    int flag = 0;
+    char buffer[BUFFER_SIZE] = {0};
     char type;
+    char id[BUFFER_SIZE] = {0};
+    char pass[BUFFER_SIZE] = {0};
+    myRecvMsg(socket, id, &type);
+    myRecvMsg(socket, pass, &type);
     myRecvMsg(socket, buffer, &type);
-    if (strcmp(buffer, "exit") == 0){
-        return STOP_LOOP;
+    if (strcmp(buffer, "1") == 0){
+        flag = 1;
     }
-    else {
-        printf("recv_buffer: %s\n", buffer);
-        if (mySendMsg(socket, buffer, sizeof(buffer), MY_MSG) < 0){
-            return -1;
+    else if (strcmp(buffer, "2") == 0){
+        flag = 2;
+    }
+    else if (strcmp(buffer, "3") == 0){
+        flag = 3;
+    }
+    else if (strcmp(buffer, "4") == 0){
+        flag = 4;
+    }
+    else if (strcmp(buffer, "5") == 0){
+        flag = 5;
+    }
+    else if (strcmp(buffer, "6") == 0){
+        flag = 6;
+    }
+    else if (strcmp(buffer, "7") == 0){
+        flag = 7;
+    }else if (strcmp(buffer, "8") == 0){
+        flag = 8;
+    }
+    else if (strcmp(buffer, "9") == 0){
+        flag = 9;
+        mySendMsg(socket, &flag, sizeof(flag), MY_MSG);
+        return flag;
+    }
+    else if (strcmp(buffer, "-1024") == 0){
+        flag = -1024;
+        mySendMsg(socket, &flag, sizeof(flag), MY_MSG);
+        return flag;
+    }
+
+    if (flag != 8){
+        int state = login(id, pass);
+        if (state != -4){
+            flag = state;
         }
-        return 0;
     }
+    mySendMsg(socket, &flag, sizeof(flag), MY_MSG);
+    return flag;
 }
 
 int recvMail(){
@@ -100,31 +149,26 @@ int modifyBlackList() {
 
 }
 
-int servLogin(int sock){
-    char id[BUFFER_SIZE];
-    char pass[BUFFER_SIZE];
+int servLogin(int sock) {
+    char id[FLAG_SIZE] = {0};
+    char pass[FLAG_SIZE] = {0};
     char type;
-    bzero(id, sizeof(id));
-    bzero(pass, sizeof(pass));
     myRecvMsg(sock, id, &type);
     myRecvMsg(sock, pass, &type);
     int flag = login(id, pass);
-    switch (flag) {
-        case 0:
-            break;
-        case -1:
-            perror("文件打开错误");
-            break;
-        case -2:
-            break;
-        case -3:
-            break;
-        case -4:
-            break;
-        default:
-            break;
-    }
+    mySendMsg(sock, &flag, sizeof(flag), MY_MSG);
     return flag;
 
 
+}
+
+int servSignUp(int sock) {
+    char id[FLAG_SIZE] = {0};
+    char pass[FLAG_SIZE] = {0};
+    char type;
+    myRecvMsg(sock, id, &type);
+    myRecvMsg(sock, pass, &type);
+    int flag = selfInitiallization(id, pass);
+    mySendMsg(sock, &flag, sizeof(flag), MY_MSG);
+    return flag;
 }

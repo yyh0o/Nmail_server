@@ -9,6 +9,8 @@
 #ifndef BlackList_h
 #define BlackList_h
 
+
+
 struct blacklist{
     char ID[12];
 };//黑名单的结构体

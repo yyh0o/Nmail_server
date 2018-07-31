@@ -13,7 +13,7 @@ int sysInitiallization() {
     if (state < 0)
         return -2;
     FILE *fp;
-    fp = fopen(USERLIST, "w+");//建立用户注册星系文件
+    fp = fopen(USERLIST, "w+");//建立用户注册信息文件
     if (fp==NULL)
         return -1;
     fclose(fp);
@@ -91,7 +91,7 @@ int selfInitiallization(char* userId,char*passWord){
 }
 /*********************************************
 当一个新用户注册时,检查用户是否存在，若不存在，将其与密码存于用户注册性系表忠
-返回值：-2 用户数量为副，usernum出错
+返回值：-2 用户数量为负，usernum出错
         0 成功
         -1 打开文件失败
         -3用户已存在

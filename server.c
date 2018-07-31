@@ -1,8 +1,13 @@
 #include "mySocket.h"
 #include "client_fun.h"
 #include "server.h"
+#include "Initialization.h"
+#include "mailGoToBox.h"
 
 int serverInit(){
+
+    sysInitiallization(); //初始化文件服务器
+
     int sockfd = 0;				//用于储存服务端套接字
 
     unsigned short port = 23333; // 监听端口

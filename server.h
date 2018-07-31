@@ -5,8 +5,11 @@
 #ifndef NMAIL_SERVER_SERVER_H
 #define NMAIL_SERVER_SERVER_H
 
+
+
 #include "mySocket.h"
 #include "client_fun.h"
+#include "Initialization.h"
 
 int serverRun();
 int serverInit();

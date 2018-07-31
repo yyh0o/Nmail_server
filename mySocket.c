@@ -78,7 +78,6 @@ int new_connected_sock(const char* ip, unsigned short port) {
 
 }
 
-
 /********************************************************************
  * 发送信息
  * @param sockfd 已建立连接的套接字
@@ -115,7 +114,6 @@ int  myRecvMsg(int sockdf, char *buf, char* type) {
     return head.len;                                        //返回接收消息长度
 }
 
-
 /***********************************************************************
  * 发送文件
  * @param sockdf 以建立连接的套接字
@@ -147,7 +145,6 @@ int mySendFile(int sockdf, const char* fileName,int nameLen, FILE* fp){
     }
     return 0;
 }
-
 
 /************************************************************
  * 接收文件
@@ -194,4 +191,47 @@ int myRecvFile(int sockdf, const char* path, int pathlen) {
     }
     fclose(fp);                                             //关闭文件
     return 0;
+}
+
+/*************************************************************************
+ * 接收文件
+ * @param sockdf 以建立连接的套接字
+ * @return 成功返回0,失败返回-1
+ */
+int serverRecvMail(int sockdf){
+    char fileName[50];                          //初始化文件名
+    bzero(fileName, sizeof(fileName));
+    char type;                                  //记录数据格式
+    myRecvMsg(sockdf, fileName, &type);         //接收邮件文件名
+    if (type != MY_MSG_MAIL){
+        perror("数据类型错误");
+        return -1;
+    }
+    if (myRecvFile(sockdf, TMP_STORAGE, sizeof(TMP_STORAGE)) == -1) {
+        perror("邮件接收失败");
+        return -1;
+    }//将邮件接收到暂存区
+
+    int flag = 0;
+    flag = sfRecieve(fileName);                        //投递邮件
+
+    switch (flag) {                                    //返回
+        case 0:
+            return 0;
+        case -1:
+            perror("文件打开失败");
+            return -1;
+        case -2:
+            perror("邮件被拒收");
+            return -1;
+        default:
+            perror("未知错误");
+            return -1;
+    }
+
+
+}
+
+int clientSendMail(){
+
 }

@@ -8,8 +8,6 @@
  * @param argv 无
  * @return 无
  */
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     serverRun();
-
 }

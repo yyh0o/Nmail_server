@@ -26,6 +26,7 @@
 #define SINGUP 9
 #define LOGOUT 10
 #define FLAG_SIZE 100
+#define DO_NOTHING 12138
 
 void *client_fun(void *arg);
 int getFlag(int socket);

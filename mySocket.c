@@ -2,6 +2,7 @@
 // Created by yyh on 18-7-30.
 //
 #include "mySocket.h"
+#include "Initialization.h"
 
 /***********************************************************************
  * 创建一个地址结构体

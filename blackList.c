@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "blackList.h"
+#include "Initialization.h"
 
 /****************
  查找联系人

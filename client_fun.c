@@ -51,11 +51,12 @@ void *client_fun(void *arg)
                 break;
             case LOGIN:
                 servLogin(sock);
+                break;
             case SINGUP:
+                servSignUp(sock);
                 break;
             case LOGOUT:
                 servLogOut(sock);
-                flag = -1024;
                 break;
             default:
                 break;
@@ -76,9 +77,12 @@ int getFlag(int socket){
     char type;
     char id[BUFFER_SIZE] = {0};
     char pass[BUFFER_SIZE] = {0};
+    if ((myRecvMsg(socket, buffer, &type) <= 0)){
+        flag = STOP_LOOP;
+        return flag;
+    }
     myRecvMsg(socket, id, &type);
     myRecvMsg(socket, pass, &type);
-    myRecvMsg(socket, buffer, &type);
     if (strcmp(buffer, "1") == 0){
         flag = 1;
     }

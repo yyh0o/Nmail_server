@@ -11,7 +11,7 @@
 #include "client_fun.h"
 #include "Initialization.h"
 
-#define MY_PORT 23333
+#define MY_PORT 2333
 
 int serverRun();
 int serverInit();

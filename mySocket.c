@@ -103,9 +103,13 @@ int mySendMsg(int sockfd, char *buf, int len, char type) {
  * @return 返回接收文件的大小
  */
 int  myRecvMsg(int sockdf, char *buf, char* type) {
+    int flag = 0;
     myMsgHead head;                                         //创建一个数据头
     char* buffer = (char*)malloc(sizeof(myMsgHead)+1);      //创建一个缓冲区
-    recv(sockdf, buffer, sizeof(myMsgHead), 0);             //接收一个数据头大小的数据
+    flag = recv(sockdf, buffer, sizeof(myMsgHead), 0);      //接收一个数据头大小的数据
+    if (flag <= 0){
+        return flag;
+    }
     memcpy(&head, buffer, sizeof(myMsgHead));               //将接收的数据写进数据头
     free(buffer);                                           //释放冲区内存
     if (buffer){

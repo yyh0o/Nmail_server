@@ -34,9 +34,9 @@ struct sockaddr new_addr(unsigned short port, char* IP);
 int new_server_sock(unsigned short port);
 int new_connected_sock(const char* ip, unsigned short port);
 int mySendMsg(int sockfd, char *buf, int len, char type);
-int  myRecvMsg(int sockdf, char *buf, char* type);
+int myRecvMsg(int sockdf, char *buf, char* type);
 int mySendFile(int sockdf, const char* fileName,int nameLen, FILE* fp);
-int myRecvFile(int sockdf, const char* path, int pathlen);
+int myRecvFile(int sockdf, const char* path, int pathlen, char* mfileName);
 int serverRecvMail(int sockdf);
 
 #endif //NMAIL_SERVER_MYSOCKET_H

@@ -8,6 +8,8 @@
 
 #ifndef packaging_h
 #define packaging_h
+
+#include <string.h>
 struct MAILHEAD{
     char targetID[25];
     char originID[25];

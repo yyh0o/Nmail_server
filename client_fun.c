@@ -23,13 +23,13 @@ void *client_fun(void *arg)
         }
         switch (flag) {
             case RECV_MAIL:
-                recvMail();
+                servRecvMail(sock);
                 break;
             case CHECK_MAIL:
                 checkMail();
                 break;
             case SEND_MAIL:
-                sendMail();
+                sendMail(sock);
                 break;
             case DEL_MAIL:
                 delMail();
@@ -38,7 +38,7 @@ void *client_fun(void *arg)
                 startMail();
                 break;
             case MODIFY_CONTACT:
-                modifyContect();
+                modifyContect(sock);
                 break;
             case MODIFY_BLACK_LIST:
                 modifyBlackList();
@@ -84,7 +84,7 @@ int getFlag(int socket){
     }
     int check = login(id, pass);
 
-    if (check == -4 && flag != 8) {
+    if (check == -4 && flag == 8) {
         return DO_NOTHING;
     }
     else {
@@ -94,15 +94,18 @@ int getFlag(int socket){
     return flag;
 }
 
-int recvMail(){
-
-}
 
 int checkMail(){
 
 }
 
-int sendMail(){
+int sendMail(int sock){
+    int flag = 0;
+    char fileName[FILE_NAME_MAX_SIZE] = {0};
+    myRecvFile(sock, "server/TemporaryStorage/", sizeof("server/TemporaryStorage/"), fileName);
+    flag = sfRecieve(fileName);
+    mySendMsg(sock, &flag, sizeof(flag), MY_MSG);
+    return flag;
 
 }
 
@@ -114,7 +117,16 @@ int startMail() {
 
 }
 
-int modifyContect() {
+int modifyContect(int sock) {
+    char type;
+    char id[12];
+    char buf[FILE_NAME_MAX_SIZE];
+    myRecvMsg(sock, id, &type);
+    char path[FILE_NAME_MAX_SIZE];
+    strcat(path, "server/");
+    strcat(path, id);
+    strcat(path, "/mailBox/");
+    myRecvFile(sock, path, strlen(path) + 1, buf);
 
 }
 
@@ -151,6 +163,42 @@ int servSignUp(int sock) {
     myRecvMsg(sock, id, &type);
     myRecvMsg(sock, pass, &type);
     int flag = selfInitiallization(id, pass);
+    mySendMsg(sock, &flag, sizeof(flag), MY_MSG);
+    return flag;
+}
+
+int servRecvMail(int sock) {
+    char id[FLAG_SIZE];
+    int flag = RECV_MAIL;
+    char type;
+    myRecvMsg(sock, id, &type);
+    char path[FILE_NAME_MAX_SIZE] = {0};
+    strcat(path, "server/");
+    strcat(path, id);
+    strcat(path,"/mailBox/mailNumber.txt");
+    FILE* fp = fopen(path, "r");
+    if (fp){
+        mySendFile(sock, "mailNumber.txt", sizeof("mailNumber.txt"), fp);
+        fclose(fp);
+    }
+    else {
+        flag = -1;
+    }
+
+    bzero(path, sizeof(path));
+    strcat(path, "server/");
+    strcat(path, id);
+    strcat(path,"/mailBox/list.txt");
+
+
+    fp = fopen(path, "r");
+    if (fp) {
+        mySendFile(sock, "list.txt", sizeof("list.txt"), fp);
+        fclose(fp);
+    }
+    else {
+        flag = -1;
+    }
     mySendMsg(sock, &flag, sizeof(flag), MY_MSG);
     return flag;
 }

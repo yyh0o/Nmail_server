@@ -14,10 +14,7 @@
 //  Copyright © 2018年 周彦錞. All rights reserved.
 //
 
-#define CONTACT_LIST "ContactList.txt"
-#define CONTACT_NUM "ContactListNum.txt"
-#include <stdio.h>
-#include <string.h>
+
 #include "contact.h"
 
 /****************

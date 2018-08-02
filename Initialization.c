@@ -49,6 +49,7 @@ int selfInitiallization(char* userId,char*passWord){
     char temp5[50];
     char temp6[50];
     char temp7[50];
+    int number = 0;
 
     memset(catlog,0,50);
     memset(temp1,0,50);
@@ -102,6 +103,7 @@ int selfInitiallization(char* userId,char*passWord){
     if (fp6==NULL) {
         return -1;
     }
+    fwrite(&number, sizeof(int), 1, fp6);
     fclose(fp6);
 
     strcat(temp7,"/contactNum.txt");
@@ -110,6 +112,7 @@ int selfInitiallization(char* userId,char*passWord){
     if (fp7==NULL) {
         return -1;
     }
+    fwrite(&number, sizeof(int), 1, fp7);
     fclose(fp7);
 
     strcat(temp4,"/mailBox");
@@ -132,6 +135,7 @@ int selfInitiallization(char* userId,char*passWord){
     if (fp5==NULL) {
         return -1;
     }
+    fwrite(&number, sizeof(int), 1, fp5);
     fclose(fp5);
     return 0;
 

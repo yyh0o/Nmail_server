@@ -9,13 +9,19 @@
 #ifndef Contact_h
 #define Contact_h
 
-
+#define CONTACT_LIST "ContactList.txt"
+#define CONTACT_NUM "ContactListNum.txt"
+#include <stdio.h>
+#include <string.h>
 
 struct CONTACT {
     char ID[12];
     char remark[10];
 }; //联系人的结构体
 
+int reduceContactListNum(void);
+int addContactListNum(void);
+int getContactListNum(void);
 int addContactNum(void);//添加联系人人数
 int getContactNum(void);//得到联系人人数
 int reduceContactNum(void);//减少联系人人数

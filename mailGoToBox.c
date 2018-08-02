@@ -31,7 +31,7 @@ int sfRecieve(char* filename){
     strcat(targetIdBlackList,"/blackList.txt");
     FILE* fp1;
     fp1=fopen(targetIdBlackList,"r");
-    if(fp==NULL)
+    if(fp1==NULL)
         return -1;
     for(int i=0;i<=getBlackListNum()-1;i++){
         fread(&temp1,sizeof(struct blacklist),1,fp1);
@@ -39,7 +39,7 @@ int sfRecieve(char* filename){
             temphead.sendstate=2;
             FILE* fp2;
             fp2=fopen(fileCompleteName,"w+");
-            if(fp1==NULL)
+            if(fp2==NULL)
                 return -1;
             fwrite(&temphead,sizeof(MAILHEAD),1,fp2);
             fwrite(&tempbody,sizeof(MAILBODY),1,fp2);
@@ -106,14 +106,14 @@ int throwMail(char* filename){
 
     int number=0;
     FILE* fp2;
-    fp2=fopen(listAdress,"r");
+    fp2=fopen(numAdress,"r");
     if(fp2==NULL)
         return -1;
     fread(&number,sizeof(int),1,fp2);
     fclose(fp2);
     number++;
     FILE* fp3;
-    fp3=fopen(listAdress,"w+");
+    fp3=fopen(numAdress,"w+");
     if(fp3==NULL)
         return -1;
     fwrite(&number,sizeof(int),1,fp3);

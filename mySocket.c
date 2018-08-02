@@ -133,7 +133,7 @@ int mySendFile(int sockdf, const char* fileName,int nameLen, FILE* fp){
     mySendMsg(sockdf, fileName, nameLen, MY_MSG_FILE);      //发送文件名
     char buffer[BUFFER_SIZE];                               //新建缓冲区
     bzero(buffer, sizeof(buffer));                          //初始化缓冲区
-    myRecvMsg(sockdf, buffer, &type);                 //接受返回数据
+    myRecvMsg(sockdf, buffer, &type);                       //接受返回数据
     if (strcmp(buffer,"OK") == 0){                          //判断是否可发文件
         bzero(buffer, sizeof(buffer));
         int fileBlockLen = 0;                               //记录文件块长度
@@ -159,7 +159,7 @@ int mySendFile(int sockdf, const char* fileName,int nameLen, FILE* fp){
  * @param pathlen 文件路径长度
  * @return 文件成功接收返回0,接收失败返回-1
  */
-int myRecvFile(int sockdf, const char* path, int pathlen) {
+int myRecvFile(int sockdf, const char* path, int pathlen, char* mfileName) {
     char fileName[FILE_NAME_MAX_SIZE];                      //记录文件名
     char type;                                              //记录数据类型
     bzero(fileName, sizeof(fileName));                      //初始化文件名数组
@@ -168,6 +168,10 @@ int myRecvFile(int sockdf, const char* path, int pathlen) {
         perror("数据类型不匹配");
         return -1;
     }
+
+    bzero(mfileName, strlen(fileName) + 1);
+    strcpy(mfileName, fileName);
+
     char* filePath = (char*)malloc(pathlen+fileNameLen+1);  //生成文件储存路径
     bzero(filePath,pathlen+fileNameLen+1);
     strcpy(filePath,path);
@@ -197,47 +201,4 @@ int myRecvFile(int sockdf, const char* path, int pathlen) {
     }
     fclose(fp);                                             //关闭文件
     return 0;
-}
-
-/*************************************************************************
- * 接收文件
- * @param sockdf 以建立连接的套接字
- * @return 成功返回0,失败返回-1
- */
-int serverRecvMail(int sockdf){
-    char fileName[50];                          //初始化文件名
-    bzero(fileName, sizeof(fileName));
-    char type;                                  //记录数据格式
-    myRecvMsg(sockdf, fileName, &type);         //接收邮件文件名
-    if (type != MY_MSG_MAIL){
-        perror("数据类型错误");
-        return -1;
-    }
-    if (myRecvFile(sockdf, TMP_STORAGE, sizeof(TMP_STORAGE)) == -1) {
-        perror("邮件接收失败");
-        return -1;
-    }//将邮件接收到暂存区
-
-    int flag = 0;
-    flag = sfRecieve(fileName);                        //投递邮件
-
-    switch (flag) {                                    //返回
-        case 0:
-            return 0;
-        case -1:
-            perror("文件打开失败");
-            return -1;
-        case -2:
-            perror("邮件被拒收");
-            return -1;
-        default:
-            perror("未知错误");
-            return -1;
-    }
-
-
-}
-
-int clientSendMail(){
-
 }

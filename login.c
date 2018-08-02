@@ -58,8 +58,6 @@ void moState(char* ID){
         if(strcmp(temp[i].userId,ID)==0){
             if(temp[i].state==1)
                 temp[i].state=0;
-            else
-                temp[i].state=1;
             break;
 
         }

@@ -24,22 +24,22 @@
 #define MODIFY_BLACK_LIST 7
 #define LOGIN 8
 #define SINGUP 9
-#define LOGOUT 10
+#define LOGOUT 0
 #define FLAG_SIZE 100
 #define DO_NOTHING 12138
 
 void *client_fun(void *arg);
 int getFlag(int socket);
-int recvMail();
 int checkMail();
-int sendMail();
+int sendMail(int sock);
 int delMail();
 int startMail();
-int modifyContect();
+int modifyContect(int sock);
 int modifyBlackList();
 int servLogin(int sock);
 int servSignUp(int sock);
 int servLogOut(int sock);
+int servRecvMail(int sock);
 
 
 #endif //NMAIL_SERVER_CLIENT_FUN_H
